@@ -1,5 +1,5 @@
-(defproject clj-oauth "1.2.3"
-  :description "OAuth support for Clojure"
+(defproject clj-oauth-server "1.0.0"
+  :description "OAuth server support for Clojure"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [com.twinql.clojure/clj-apache-http "2.3.1"]]
