@@ -21,8 +21,15 @@
 
 (defn request-method [request] (upper-case (as-str (request :request-method))))
 
+(defn signature-request-port
+  [{:keys [scheme server-port]}]
+  (condp = [scheme server-port]
+    ["https" "443"] ""
+    ["http" "80"] ""
+    (str ":" server-port)))
+
 (defn request-uri [request]
-  (str (or (as-str (request :scheme)) "http") "://" (request :server-name) (request :uri)))
+  (str (or (as-str (request :scheme)) "http") "://" (request :server-name) (signature-request-port request) (request :uri)))
 
 (defn request-parameters [request]
   (merge (dissoc (oauth-params request) :oauth_signature) (request :params)))
