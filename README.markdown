@@ -1,6 +1,6 @@
 # OAuth support for Ring server applications in Clojure #
 
-`clj-oauth` provides [OAuth](http://oauth.net) Server support for Clojure programs.
+`clj-oauth-server` provides [OAuth](http://oauth.net) Server support for Clojure programs.
 
 The server support makes it simple to add OAuth support to any [Ring](http://github.com/mmcgrana/ring) based web applications such as Compojure.
 
@@ -9,6 +9,25 @@ The server support makes it simple to add OAuth support to any [Ring](http://git
 `lein jar`
 
 The server support is implemented as Ring middleware. It depends on params middleware already having been run upstream.
+
+# Use #
+
+`clj-oauth-server` is in clojars. Use it by including it in `project.clj`
+
+    [clj-oauth-server "1.0.0"]
+
+Add it to your application. Ensure that ring parameter middleware is before `clj-oauth-server`.
+
+    (def app (-> routes
+                 (oauth/wrap-oauth token-finder)
+                 handler/api))
+
+`token-finder` is a function that looks up consumer secret and token secret given consumer key and token.
+
+    (defn token-finder [consumer token]
+      ["consumer_secret" "token_secret"])
+
+This would always match.
 
 # Authors #
 
