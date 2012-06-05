@@ -1,4 +1,4 @@
-(ns oauth.digest
+(ns oauth-server.digest
   (:import (javax.crypto Mac)
            (javax.crypto.spec SecretKeySpec)))
 

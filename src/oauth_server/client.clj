@@ -1,9 +1,9 @@
 (ns 
     #^{:author "Matt Revelle"
        :doc "OAuth client library for Clojure."} 
-  oauth.client
-  (:require [oauth.digest :as digest]
-            [oauth.signature :as sig]
+  oauth-server.client
+  (:require [oauth-server.digest :as digest]
+            [oauth-server.signature :as sig]
             [com.twinql.clojure.http :as http])
   (:use [clojure.contrib.string :only [as-str join split upper-case]]))
 

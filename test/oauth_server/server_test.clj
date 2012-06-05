@@ -1,8 +1,8 @@
-(ns oauth.server-test
-  (:require [oauth.server :as os]
-            [oauth.client :as oc]
-            [oauth.signature :as sig]
-            [oauth.token-store :as store] :reload-all)
+(ns oauth-server.server-test
+  (:require [oauth-server.server :as os]
+            [oauth-server.client :as oc]
+            [oauth-server.signature :as sig]
+            [oauth-server.token-store :as store] :reload-all)
   (:use clojure.test))
 
 (deftest

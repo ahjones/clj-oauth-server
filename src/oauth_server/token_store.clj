@@ -1,8 +1,8 @@
 (ns 
     #^{:author "Pelle Braendgaard"
        :doc "OAuth Token store"} 
-  oauth.token-store
-  (:use [oauth.signature :only [rand-str]])  
+  oauth-server.token-store
+  (:use [oauth-server.signature :only [rand-str]])  
 )
 
 ;; Return a Consumer record based on consumer key.

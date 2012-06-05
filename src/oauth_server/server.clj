@@ -1,9 +1,9 @@
 (ns 
     #^{:author "Pelle Braendgaard"
        :doc "OAuth server library for Clojure."} 
-  oauth.server
-  (:require [oauth.digest :as digest]
-            [oauth.signature :as sig])
+  oauth-server.server
+  (:require [oauth-server.digest :as digest]
+            [oauth-server.signature :as sig])
   (:use [clojure.contrib.string :only [upper-case as-str]]))
 
 (defn parse-oauth-header 

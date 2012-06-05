@@ -1,5 +1,5 @@
-(ns oauth.token-store-test
-  (:require [oauth.token-store :as store] :reload-all)
+(ns oauth-server.token-store-test
+  (:require [oauth-server.token-store :as store] :reload-all)
   (:use clojure.test))
   
   (deftest  

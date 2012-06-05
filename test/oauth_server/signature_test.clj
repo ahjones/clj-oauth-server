@@ -1,6 +1,6 @@
-(ns oauth.signature-test
-  (:require [oauth.client :as oc]
-            [oauth.signature :as sig] :reload-all)
+(ns oauth-server.signature-test
+  (:require [oauth-server.client :as oc]
+            [oauth-server.signature :as sig] :reload-all)
   (:use clojure.test))
 
 (def twitter-req-params

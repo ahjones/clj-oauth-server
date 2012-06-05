@@ -1,8 +1,8 @@
 (ns 
     #^{:author "Matt Revelle"
        :doc "OAuth client library for Clojure."} 
-  oauth.signature
-  (:require [oauth.digest :as digest])
+  oauth-server.signature
+  (:require [oauth-server.digest :as digest])
   (:use [clojure.contrib.string :only [join as-str]]))
 
 (declare rand-str

@@ -1,2 +1,2 @@
-(ns oauth
-  (:require oauth.client))
+(ns oauth-server
+  (:require oauth-server.client))
