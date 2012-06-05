@@ -17,7 +17,7 @@
                  (re-seq #"(oauth_[^=, ]+)=\"([^\"]*)\"" auth)))))
 
 (defn oauth-params [request]
-  (parse-oauth-header ((or (request :headers) {}) :authorize)))
+  (parse-oauth-header ((or (request :headers) {}) "authorization")))
 
 (defn request-method [request] (upper-case (as-str (request :request-method))))
 
