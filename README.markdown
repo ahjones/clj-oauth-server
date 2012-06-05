@@ -12,7 +12,7 @@ The server support is implemented as Ring middleware. It depends on params middl
 
 # Use #
 
-`clj-oauth-server` is in clojars. Use it by including it in `project.clj`
+`clj-oauth-server` is in [Clojars](https://clojars.org/clj-oauth-server). Use it with Leiningen by addit to `project.clj`
 
     [clj-oauth-server "1.0.0"]
 
