@@ -29,7 +29,11 @@
     (str ":" server-port)))
 
 (defn request-uri [request]
-  (str (or (as-str (request :scheme)) "http") "://" (request :server-name) (signature-request-port request) (request :uri)))
+  (str (or (as-str (request :scheme)) "http")
+       "://"
+       (request :server-name)
+       (signature-request-port request)
+       (request :uri)))
 
 (defn request-parameters [request]
   (merge (dissoc (oauth-params request) :oauth_signature) (request :params)))
@@ -40,11 +44,13 @@
   (sig/base-string (request-method request) (request-uri request) (request-parameters request)))
 
 (defn wrap-oauth
-  "Middleware to handle OAuth authentication of requests. If the request is oauth authenticated it adds the following to the request:
+  "Middleware to handle OAuth authentication of requests. If the request is oauth
+   authenticated it adds the following to the request:
     :oauth-token - The oauth token used
     :oauth-consumer - The consumer key used
-  Takes a function which will be used to find a token. This accepts the consumer and token parameters
-  and should return the responding consumer secret and token secret."
+  Takes a function which will be used to find a token. This accepts the consumer
+  and token parameters and should return the responding consumer secret and token
+  secret."
   [handler token-finder]
   (fn [request]
     (let 
@@ -53,12 +59,12 @@
         (let 
             [oauth-consumer (op :oauth_consumer_key)
              oauth-token (op :oauth_token)
-             secrets (token-finder oauth-consumer oauth-token)]
+             [consumer-secret token-secret] (token-finder oauth-consumer oauth-token)]
           (if (and (not (empty? secrets)) (sig/verify 
                                            (op :oauth_signature)
-                                           {:secret (first secrets) :signature-method :hmac-sha1}
+                                           {:secret consumer-secret :signature-method :hmac-sha1}
                                            (request-base-string request)
-                                           (last secrets)))
+                                           token-secret))
             (handler (assoc request :oauth-consumer oauth-consumer :oauth-token oauth-token))
             (handler request)))
         (handler request)))))
