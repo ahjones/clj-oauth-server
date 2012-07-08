@@ -24,24 +24,25 @@
 (defn signature-request-port
   [{:keys [scheme server-port]}]
   (condp = [scheme server-port]
-    ["https" "443"] ""
-    ["http" "80"] ""
+    [:https 443] ""
+    [:http 80] ""
     (str ":" server-port)))
 
-(defn request-uri [request]
-  (str (or (as-str (request :scheme)) "http")
-       "://"
-       (request :server-name)
-       (signature-request-port request)
-       (request :uri)))
+(defn request-uri [request & {:as overrides}]
+  (let [request (into request (filter second overrides))]
+    (str (or (as-str (request :scheme)) "http")
+         "://"
+         (request :server-name)
+         (signature-request-port request)
+         (request :uri))))
 
 (defn request-parameters [request]
   (merge (dissoc (oauth-params request) :oauth_signature) (request :params)))
 
 (defn request-base-string
   "creates a signature base string from a ring request"
-  [request]
-  (sig/base-string (request-method request) (request-uri request) (request-parameters request)))
+  [request & overrides]
+  (sig/base-string (request-method request) (apply request-uri request overrides) (request-parameters request)))
 
 (defn wrap-oauth
   "Middleware to handle OAuth authentication of requests. If the request is oauth
@@ -51,7 +52,7 @@
   Takes a function which will be used to find a token. This accepts the consumer
   and token parameters and should return the responding consumer secret and token
   secret."
-  [handler token-finder]
+  [handler token-finder & overrides]
   (fn [request]
     (let 
         [op (oauth-params request)]
@@ -63,7 +64,7 @@
           (if (and consumer-secret token-secret (sig/verify 
                                                  (op :oauth_signature)
                                                  {:secret consumer-secret :signature-method :hmac-sha1}
-                                                 (request-base-string request)
+                                                 (apply request-base-string request overrides)
                                                  token-secret))
             (handler (assoc request :oauth-consumer oauth-consumer :oauth-token oauth-token))
             (handler request)))
