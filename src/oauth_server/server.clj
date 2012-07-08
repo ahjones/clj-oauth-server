@@ -60,7 +60,7 @@
             [oauth-consumer (op :oauth_consumer_key)
              oauth-token (op :oauth_token)
              [consumer-secret token-secret] (token-finder oauth-consumer oauth-token)]
-          (if (and (not (empty? secrets)) (sig/verify 
+          (if (and consumer-secret token-secret (sig/verify 
                                            (op :oauth_signature)
                                            {:secret consumer-secret :signature-method :hmac-sha1}
                                            (request-base-string request)
