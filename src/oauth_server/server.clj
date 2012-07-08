@@ -61,10 +61,10 @@
              oauth-token (op :oauth_token)
              [consumer-secret token-secret] (token-finder oauth-consumer oauth-token)]
           (if (and consumer-secret token-secret (sig/verify 
-                                           (op :oauth_signature)
-                                           {:secret consumer-secret :signature-method :hmac-sha1}
-                                           (request-base-string request)
-                                           token-secret))
+                                                 (op :oauth_signature)
+                                                 {:secret consumer-secret :signature-method :hmac-sha1}
+                                                 (request-base-string request)
+                                                 token-secret))
             (handler (assoc request :oauth-consumer oauth-consumer :oauth-token oauth-token))
             (handler request)))
         (handler request)))))
