@@ -49,9 +49,9 @@
    authenticated it adds the following to the request:
     :oauth-token - The oauth token used
     :oauth-consumer - The consumer key used
-  Takes a function which will be used to find a token. This accepts the consumer
-  and token parameters and should return the responding consumer secret and token
-  secret."
+  Takes a function which will be used to lookup the consumer secret and token secret.
+  This function should accept the consumer key, access token and request map and return
+  the corresponding consumer secret and token secret."
   [handler token-finder & overrides]
   (fn [request]
     (let
@@ -60,7 +60,7 @@
         (let
             [oauth-consumer (op :oauth_consumer_key)
              oauth-token (op :oauth_token)
-             [consumer-secret token-secret] (token-finder oauth-consumer oauth-token)]
+             [consumer-secret token-secret] (token-finder oauth-consumer oauth-token request)]
           (if (and consumer-secret token-secret (sig/verify
                                                  (op :oauth_signature)
                                                  {:secret consumer-secret :signature-method :hmac-sha1}
