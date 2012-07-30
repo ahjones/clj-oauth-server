@@ -1,19 +1,19 @@
-(ns 
+(ns
     #^{:author "Pelle Braendgaard"
-       :doc "OAuth server library for Clojure."} 
+       :doc "OAuth server library for Clojure."}
   oauth-server.server
   (:require [oauth-server.digest :as digest]
             [oauth-server.signature :as sig])
   (:use [clojure.contrib.string :only [upper-case as-str]]))
 
-(defn parse-oauth-header 
+(defn parse-oauth-header
   "Parses the oauth http header"
   [auth]
-  (if (or (= auth nil) 
+  (if (or (= auth nil)
           (not (re-find #"^OAuth" auth)))
     nil
     (reduce (fn [v c] (conj c v)) {}  ; I know there has to be a simpler way of doing this
-            (map (fn [x] {(keyword ( x 1)) (sig/url-decode (x 2))}) 
+            (map (fn [x] {(keyword ( x 1)) (sig/url-decode (x 2))})
                  (re-seq #"(oauth_[^=, ]+)=\"([^\"]*)\"" auth)))))
 
 (defn oauth-params [request]
@@ -49,19 +49,19 @@
    authenticated it adds the following to the request:
     :oauth-token - The oauth token used
     :oauth-consumer - The consumer key used
-  Takes a function which will be used to find a token. This accepts the consumer
-  and token parameters and should return the responding consumer secret and token
-  secret."
+  Takes a function which will be used to lookup the consumer secret and token secret.
+  This function should accept the consumer key, access token and request map and return
+  the corresponding consumer secret and token secret."
   [handler token-finder & overrides]
   (fn [request]
-    (let 
+    (let
         [op (oauth-params request)]
       (if (not (empty? op))
-        (let 
+        (let
             [oauth-consumer (op :oauth_consumer_key)
              oauth-token (op :oauth_token)
-             [consumer-secret token-secret] (token-finder oauth-consumer oauth-token)]
-          (if (and consumer-secret token-secret (sig/verify 
+             [consumer-secret token-secret] (token-finder oauth-consumer oauth-token request)]
+          (if (and consumer-secret token-secret (sig/verify
                                                  (op :oauth_signature)
                                                  {:secret consumer-secret :signature-method :hmac-sha1}
                                                  (apply request-base-string request overrides)
