@@ -36,8 +36,12 @@
          (signature-request-port request)
          (request :uri))))
 
+(defn params-without-route [req]
+  "Removes the route params from the params entry"
+  (apply dissoc (:params req) (keys (:route-params req))))
+
 (defn request-parameters [request]
-  (merge (dissoc (oauth-params request) :oauth_signature) (request :params)))
+  (merge (dissoc (oauth-params request) :oauth_signature) (params-without-route request)))
 
 (defn request-base-string
   "creates a signature base string from a ring request"
