@@ -24,7 +24,10 @@
 
 (defn url-form-encode [params]
   (join "&" (map (fn [[k v]]
-                      (str (url-encode (as-str k)) "=" (url-encode (as-str v)))) params )))
+                   (if (vector? v)
+                     (url-form-encode (map (partial vector k) (sort v)))
+                     (str (url-encode (as-str k)) "=" (url-encode (as-str v))))) params)))
+
 (defn base-string
   ([method base-url c t params]
      (base-string method base-url (assoc params

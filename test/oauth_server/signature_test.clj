@@ -176,5 +176,5 @@
   (is (= (sig/url-form-encode {:hello "there" :name "Bill" }) "hello=there&name=Bill"))
 
   (is (= (sig/url-form-encode {:hello "there"}) "hello=there"))
-  (is (= (sig/url-form-encode {:hello "there" :name "Bill Smith" }) "hello=there&name=Bill%20Smith")))
-
+  (is (= (sig/url-form-encode {:hello "there" :name "Bill Smith" }) "hello=there&name=Bill%20Smith"))
+  (is (= (sig/url-form-encode {:hello "there" :name ["Smith" "Bill"] }) "hello=there&name=Bill&name=Smith")))
