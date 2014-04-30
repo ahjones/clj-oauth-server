@@ -16,8 +16,16 @@
             (map (fn [x] {(keyword ( x 1)) (sig/url-decode (x 2))})
                  (re-seq #"(oauth_[^=, ]+)=\"([^\"]*)\"" auth)))))
 
+(defn parse-oauth-requestparams
+  "Parses the oauth values from the form or query params"
+  [request]
+  (not-empty (select-keys (:params request) [:oauth_consumer_key :oauth_callback :oauth_nonce
+                                             :oauth_signature :oauth_signature_method :oauth_timestamp
+                                             :oauth_token :oauth_version])))
+
 (defn oauth-params [request]
-  (parse-oauth-header ((or (request :headers) {}) "authorization")))
+  (or (parse-oauth-header ((or (request :headers) {}) "authorization"))
+      (parse-oauth-requestparams request)))
 
 (defn request-method [request] (upper-case (as-str (request :request-method))))
 
@@ -41,7 +49,7 @@
   (apply dissoc (:params req) (keys (:route-params req))))
 
 (defn request-parameters [request]
-  (merge (dissoc (oauth-params request) :oauth_signature) (params-without-route request)))
+  (dissoc (merge (oauth-params request) (params-without-route request)) :oauth_signature))
 
 (defn request-base-string
   "creates a signature base string from a ring request"
